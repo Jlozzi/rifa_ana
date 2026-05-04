@@ -1,4 +1,4 @@
-# Rifa Beneficente
+# Rifa
 
 Site para gerenciamento de rifas com painel administrativo, autenticação e dados em tempo real via [Supabase](https://supabase.com).
 
