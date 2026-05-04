@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Rifa Beneficente</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="admin-body">
+
+  <!-- LOGIN OVERLAY -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <div class="login-icon">🔐</div>
+      <h1 class="login-title">Área Restrita</h1>
+      <p class="login-subtitle">Entre com seu e-mail e senha para acessar o painel</p>
+      <div class="form-group">
+        <label for="loginEmail">E-mail</label>
+        <input type="email" id="loginEmail" placeholder="admin@email.com" autocomplete="username" />
+      </div>
+      <div class="form-group" style="margin-bottom:4px">
+        <label for="loginSenha">Senha</label>
+        <input type="password" id="loginSenha" placeholder="Digite a senha..." autocomplete="current-password" />
+      </div>
+      <p class="login-error" id="loginError"></p>
+      <button class="btn btn-primary" id="btnEntrar" onclick="tentarLogin()">🔓 Entrar</button>
+      <a href="index.html" class="btn btn-secondary" style="margin-top:8px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px">← Ver Rifa Pública</a>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" style="display:none">
+
+    <header class="header header-admin">
+      <div class="header-bg" id="headerBg"></div>
+      <div class="header-overlay"></div>
+      <div class="header-content">
+        <div class="admin-topbar">
+          <div>
+            <div class="header-emoji" style="font-size:36px;margin-bottom:4px">⚙️</div>
+            <h1 class="header-title" style="font-size:2rem">Painel Admin</h1>
+            <p class="header-subtitle" id="adminSubtitulo" style="margin-bottom:0">Rifa Beneficente</p>
+          </div>
+          <div class="admin-topbar-actions">
+            <a href="index.html" class="btn btn-secondary" style="width:auto;text-decoration:none;font-size:0.85rem">👁️ Ver Pública</a>
+            <button class="btn btn-danger-outline" style="width:auto;font-size:0.85rem" onclick="logout()">🚪 Sair</button>
+          </div>
+        </div>
+        <div class="header-stats">
+          <div class="stat-card"><span class="stat-number" id="statTotal">0</span><span class="stat-label">Total</span></div>
+          <div class="stat-card"><span class="stat-number" id="statVendidos">0</span><span class="stat-label">Vendidos</span></div>
+          <div class="stat-card"><span class="stat-number" id="statPendentes">0</span><span class="stat-label">Pendentes</span></div>
+        </div>
+        <div class="progress-container">
+          <div class="progress-label"><span>Progresso</span><span id="progressPercent">0%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+
+      <!-- ===== SOLICITAÇÕES PENDENTES ===== -->
+      <section class="solicitacoes-section" id="solicitacoesSection">
+        <div class="section-header-row">
+          <h2 class="section-title">⏳ Solicitações Pendentes</h2>
+          <span class="badge-count" id="badgePendentes">0</span>
+        </div>
+        <div class="solicitacoes-grid" id="solicitacoesGrid"></div>
+        <p class="empty-state" id="emptySolicitacoes">Nenhuma solicitação pendente. ✅</p>
+      </section>
+
+      <div class="admin-grid">
+
+        <!-- COLUNA ESQUERDA -->
+        <div class="admin-col">
+
+          <!-- CONFIG GERAL -->
+          <div class="card">
+            <h2 class="card-title">⚙️ Configurações</h2>
+            <div class="form-group">
+              <label for="cfgNome">Nome da Rifa</label>
+              <input type="text" id="cfgNome" placeholder="Ex: Rifa de Natal da Família" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cfgTotal">Qtd. de Números</label>
+                <input type="number" id="cfgTotal" min="10" max="1000" value="200" />
+              </div>
+              <div class="form-group">
+                <label for="cfgPreco">Preço por Número (R$)</label>
+                <input type="number" id="cfgPreco" min="1" step="0.50" value="20" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cfgContato">Contato do Organizador</label>
+              <input type="text" id="cfgContato" placeholder="Ex: WhatsApp (99) 99999-9999" />
+            </div>
+            <div class="form-group">
+              <label for="cfgPix">Chave Pix para Pagamento</label>
+              <input type="text" id="cfgPix" placeholder="Ex: email@email.com, CPF, telefone ou chave aleatória" />
+            </div>
+            <div class="form-group">
+              <label for="cfgSenha">Nova Senha Admin (opcional)</label>
+              <input type="password" id="cfgSenha" placeholder="Deixe em branco para manter" />
+            </div>
+            <div class="form-group">
+              <label>Imagem de Fundo do Header</label>
+              <div class="image-upload-area" id="bgUploadArea" onclick="document.getElementById('bgImg').click()">
+                <img id="bgPreview" class="image-preview" style="display:none" alt="Preview fundo" />
+                <div class="upload-placeholder" id="bgPlaceholder">
+                  <span class="upload-icon">🖼️</span>
+                  <span>Clique para adicionar imagem de fundo</span>
+                  <span class="upload-hint">PNG, JPG ou WEBP — máx. 2MB</span>
+                </div>
+              </div>
+              <input type="file" id="bgImg" accept="image/*" style="display:none" onchange="carregarBgImagem(this)" />
+              <button class="btn btn-secondary" style="margin-top:8px;font-size:0.82rem" onclick="removerBgImagem()">✖️ Remover Imagem</button>
+            </div>
+            <button class="btn btn-primary" onclick="aplicarConfig()">✅ Salvar Configurações</button>
+            <button class="btn btn-danger-outline" onclick="confirmarReset()">🗑️ Resetar Tudo</button>
+          </div>
+
+          <!-- PRÊMIO -->
+          <div class="card">
+            <h2 class="card-title">🎁 Prêmio</h2>
+            <div class="form-group">
+              <label for="cfgPremio">Nome do Prêmio</label>
+              <input type="text" id="cfgPremio" placeholder="Ex: Air Fryer Mondial 4L" />
+            </div>
+            <div class="form-group">
+              <label for="cfgPremioDesc">Descrição (opcional)</label>
+              <input type="text" id="cfgPremioDesc" placeholder="Ex: Air Fryer digital, 8 funções..." />
+            </div>
+            <div class="form-group">
+              <label>Foto do Prêmio</label>
+              <div class="image-upload-area" id="premioUploadArea" onclick="document.getElementById('premioImg').click()">
+                <img id="premioPreview" class="image-preview" style="display:none" alt="Preview" />
+                <div class="upload-placeholder" id="premioPlaceholder">
+                  <span class="upload-icon">📷</span>
+                  <span>Clique para adicionar foto</span>
+                  <span class="upload-hint">PNG, JPG ou WEBP — máx. 2MB</span>
+                </div>
+              </div>
+              <input type="file" id="premioImg" accept="image/*" style="display:none" onchange="carregarImagem(this)" />
+              <button class="btn btn-secondary" style="margin-top:8px;font-size:0.82rem" onclick="removerImagem()">✖️ Remover Foto</button>
+            </div>
+            <button class="btn btn-primary" onclick="salvarPremio()">💾 Salvar Prêmio</button>
+          </div>
+
+        </div>
+
+        <!-- COLUNA DIREITA -->
+        <div class="admin-col">
+
+          <!-- REGISTRAR MANUALMENTE -->
+          <div class="card">
+            <h2 class="card-title">📋 Registrar Manualmente</h2>
+            <p style="font-size:0.83rem;color:var(--text-muted);margin-bottom:14px">Adicione um comprador direto, sem solicitação.</p>
+            <div class="form-group">
+              <label for="regNome">Nome do Comprador</label>
+              <input type="text" id="regNome" placeholder="Nome completo" />
+            </div>
+            <div class="form-group">
+              <label for="regTelefone">Telefone (opcional)</label>
+              <input type="text" id="regTelefone" placeholder="(00) 00000-0000" />
+            </div>
+            <div class="form-group">
+              <label for="regNumeros">Números (ou clique abaixo)</label>
+              <input type="text" id="regNumeros" placeholder="Ex: 5, 23, 47" />
+            </div>
+            <div class="selected-preview">
+              <span class="preview-label">Selecionados:</span>
+              <span id="selectedList">Nenhum</span>
+            </div>
+            <button class="btn btn-success" onclick="registrarComprador()">🎟️ Confirmar Venda</button>
+            <button class="btn btn-secondary" onclick="limparSelecao()">✖️ Limpar Seleção</button>
+          </div>
+
+          <!-- GRADE DE NÚMEROS -->
+          <div class="card">
+            <div class="numeros-header" style="margin-bottom:16px">
+              <h2 class="card-title" style="margin-bottom:0">🎟️ Números</h2>
+              <div class="legend">
+                <span class="legend-item"><span class="legend-dot disponivel"></span>Disponível</span>
+                <span class="legend-item"><span class="legend-dot selecionado"></span>Selecionado</span>
+                <span class="legend-item"><span class="legend-dot pendente"></span>Pendente</span>
+                <span class="legend-item"><span class="legend-dot vendido"></span>Vendido</span>
+              </div>
+            </div>
+            <input type="text" id="buscaAdmin" style="width:100%;margin-bottom:10px" placeholder="🔍 Filtrar..." oninput="buscarAdmin()" />
+            <div class="filter-buttons" style="margin-bottom:12px">
+              <button class="filter-btn active" id="filterTodos"       onclick="setFiltro('todos')">Todos</button>
+              <button class="filter-btn"         id="filterDisponiveis" onclick="setFiltro('disponivel')">Disponíveis</button>
+              <button class="filter-btn"         id="filterPendentes"   onclick="setFiltro('pendente')">Pendentes</button>
+              <button class="filter-btn"         id="filterVendidos"    onclick="setFiltro('vendido')">Vendidos</button>
+            </div>
+            <div class="numeros-grid" id="numerosGrid"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COMPRADORES CONFIRMADOS -->
+      <section class="compradores-section">
+        <h2 class="section-title">👥 Compradores Confirmados</h2>
+        <div id="compradoresList" class="compradores-grid"></div>
+        <p class="empty-state" id="emptyCompradores">Nenhum comprador confirmado ainda.</p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAIS -->
+  <div class="modal-overlay" id="modalOverlay" onclick="fecharModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-icon" id="modalIcon">⚠️</div>
+      <h3 class="modal-title" id="modalTitle">Confirmar</h3>
+      <p class="modal-msg" id="modalMsg"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+        <button class="btn btn-danger" id="modalConfirmar">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalDetalhes" onclick="fecharDetalhes()">
+    <div class="modal modal-detalhes" onclick="event.stopPropagation()">
+      <div class="modal-icon" id="detalhesIcon">🎟️</div>
+      <h3 class="modal-title" id="detalhesTitulo">Número</h3>
+      <div id="detalhesConteudo" style="margin-bottom:20px"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="fecharDetalhes()">Fechar</button>
+        <button class="btn btn-danger" id="btnDesmarcar" onclick="desmarcarNumero()" style="display:none">Desmarcar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

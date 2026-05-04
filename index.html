@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rifa Beneficente da Família 🎉</title>
+  <meta name="description" content="Escolha seus números e participe da nossa rifa beneficente familiar!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-bg" id="headerBg"></div>
+    <div class="header-overlay"></div>
+    <div class="header-content">
+      <div class="header-emoji">🎉</div>
+      <h1 class="header-title" id="headerTitle">Rifa Beneficente</h1>
+      <p class="header-subtitle">❤️</p>
+      <div class="header-stats">
+        <div class="stat-card">
+          <span class="stat-number" id="statTotal">0</span>
+          <span class="stat-label">Total</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="statVendidos">0</span>
+          <span class="stat-label">Vendidos</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="statDisponiveis">0</span>
+          <span class="stat-label">Disponíveis</span>
+        </div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-label">
+          <span>Progresso da Venda</span>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- PRÊMIO -->
+    <section class="premio-section" id="premioSection" style="display:none">
+      <h2 class="section-title">🏆 Prêmio</h2>
+      <div class="premio-showcase" id="premioShowcase"></div>
+    </section>
+
+    <!-- FILTROS -->
+    <section class="controls-section-pub">
+      <div class="pub-controls">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="busca" class="search-input" placeholder="Buscar número..." oninput="buscar()" />
+        </div>
+        <div class="filter-buttons">
+          <button class="filter-btn active" id="filterTodos" onclick="setFiltro('todos')">Todos</button>
+          <button class="filter-btn" id="filterDisponiveis" onclick="setFiltro('disponivel')">Disponíveis</button>
+          <button class="filter-btn" id="filterVendidos" onclick="setFiltro('vendido')">Vendidos</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRADE DE NÚMEROS -->
+    <section class="numeros-section">
+      <div class="numeros-header">
+        <h2 class="section-title">🎟️ Escolha seus Números</h2>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot disponivel"></span>Disponível</span>
+          <span class="legend-item"><span class="legend-dot selecionado"></span>Selecionado</span>
+          <span class="legend-item"><span class="legend-dot pendente"></span>Aguardando</span>
+          <span class="legend-item"><span class="legend-dot vendido"></span>Vendido</span>
+        </div>
+      </div>
+      <div class="numeros-grid" id="numerosGrid"></div>
+    </section>
+
+    <!-- CONTATO -->
+    <section class="info-section">
+      <div class="info-card">
+        <div class="info-icon">📱</div>
+        <div>
+          <h3 class="info-title">Dúvidas?</h3>
+          <p class="info-text" id="infoContato">Entre em contato com o organizador para reservar seu número!</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BARRA FLUTUANTE — aparece ao selecionar números -->
+  <div class="selection-bar" id="selectionBar">
+    <div class="selection-bar-info">
+      <span class="selection-count" id="selectionCount">0 número(s)</span>
+      <span class="selection-total" id="selectionTotal">R$ 0,00</span>
+    </div>
+    <button class="btn btn-success selection-btn" onclick="abrirModalSolicitacao()">
+      Reservar Números →
+    </button>
+  </div>
+
+  <!-- MODAL: RESERVAR / SOLICITAR -->
+  <div class="modal-overlay" id="modalSolicitacao" onclick="fecharSolicitacao()">
+    <div class="modal modal-solicitacao" onclick="event.stopPropagation()">
+      <div class="modal-icon">🎟️</div>
+      <h3 class="modal-title">Reservar Números</h3>
+      <p class="modal-msg">Preencha seus dados abaixo. O admin confirmará após o pagamento.</p>
+
+      <div class="solicitacao-numeros" id="solicitacaoNumeros"></div>
+      <div class="solicitacao-valor" id="solicitacaoValor"></div>
+
+      <!-- Chave Pix (só aparece se configurada) -->
+      <div class="pix-box" id="pixBox" style="display:none">
+        <span class="pix-label">💳 Pague via Pix antes de confirmar:</span>
+        <div class="pix-chave-wrap">
+          <span class="pix-chave" id="pixChaveTexto"></span>
+          <button class="pix-copiar" onclick="copiarPix()">📋 Copiar</button>
+        </div>
+      </div>
+
+      <div class="form-group" style="text-align:left;margin-top:16px">
+        <label for="solNome">Seu Nome *</label>
+        <input type="text" id="solNome" placeholder="Nome completo" />
+      </div>
+      <div class="form-group" style="text-align:left">
+        <label for="solTelefone">WhatsApp / Telefone *</label>
+        <input type="text" id="solTelefone" placeholder="(00) 00000-0000" />
+      </div>
+      <div class="form-group" style="text-align:left">
+        <label for="solObs">Observação (opcional)</label>
+        <input type="text" id="solObs" placeholder="Ex: já fiz o pix" />
+      </div>
+
+      <p class="sol-error" id="solError"></p>
+      <div class="modal-actions" style="margin-top:8px">
+        <button class="btn btn-secondary" onclick="fecharSolicitacao()">Cancelar</button>
+        <button class="btn btn-success" id="btnEnviarSolicitacao" onclick="enviarSolicitacao()">✅ Confirmar Reserva</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DETALHES DO NÚMERO -->
+  <div class="modal-overlay" id="modalDetalhes" onclick="fecharDetalhes()">
+    <div class="modal modal-detalhes" onclick="event.stopPropagation()">
+      <div class="modal-icon" id="detalhesIcon">🎟️</div>
+      <h3 class="modal-title" id="detalhesTitulo">Número</h3>
+      <div id="detalhesConteudo" style="margin-bottom:20px"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="fecharDetalhes()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Link Admin discreto -->
+  <a href="admin.html" class="admin-link" title="Área do Administrador">⚙️</a>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app.js"></script>
+  <script src="public.js"></script>
+</body>
+
+</html>

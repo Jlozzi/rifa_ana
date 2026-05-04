@@ -1,0 +1,14 @@
+# Credenciais do Supabase — NUNCA commitar
+supabase-config.js
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
