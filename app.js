@@ -31,6 +31,8 @@ function mapPremio(row) {
     nome:      row.nome      || '',
     descricao: row.descricao || '',
     imagem:    row.imagem    || null,
+    imagem2:   row.imagem2   || null,
+    imagem3:   row.imagem3   || null,
   };
 }
 

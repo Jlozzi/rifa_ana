@@ -1,6 +1,8 @@
-let filtroAtivo  = 'todos';
-let buscaAtiva   = '';
-let selecionados = [];
+let filtroAtivo      = 'todos';
+let buscaAtiva       = '';
+let selecionados     = [];
+let carouselIndex    = 0;
+let _carouselImagens = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
   await carregarEstadoPublico();
@@ -58,25 +60,72 @@ function renderizarHeader() {
 
 function renderizarPremio() {
   const { premio, config } = state;
-  const section   = document.getElementById('premioSection');
-  const showcase  = document.getElementById('premioShowcase');
+  const section  = document.getElementById('premioSection');
+  const showcase = document.getElementById('premioShowcase');
 
   if (!premio.nome && !premio.imagem) { section.style.display = 'none'; return; }
   section.style.display = '';
 
+  _carouselImagens = [premio.imagem, premio.imagem2, premio.imagem3].filter(Boolean);
+  carouselIndex = 0;
+  const multi = _carouselImagens.length > 1;
+
+  const slidesHtml = _carouselImagens.length
+    ? _carouselImagens.map((src, i) => `
+        <div class="carousel-slide">
+          <img src="${src}" alt="${escapeHtml(premio.nome)}" class="carousel-img" onclick="abrirLightbox(${i})" />
+        </div>`).join('')
+    : `<div class="carousel-slide carousel-placeholder"><span style="font-size:5rem">🎁</span></div>`;
+
+  const navHtml = multi ? `
+    <button class="carousel-btn carousel-prev" onclick="moverCarousel(-1)">&#8249;</button>
+    <button class="carousel-btn carousel-next" onclick="moverCarousel(1)">&#8250;</button>
+    <div class="carousel-dots">
+      ${_carouselImagens.map((_, i) => `<span class="carousel-dot${i === 0 ? ' active' : ''}" onclick="irParaSlide(${i})"></span>`).join('')}
+    </div>` : '';
+
   showcase.innerHTML = `
     <div class="premio-card">
-      ${premio.imagem
-        ? `<div class="premio-img-wrap"><img src="${premio.imagem}" alt="${escapeHtml(premio.nome)}" class="premio-img" /></div>`
-        : `<div class="premio-img-wrap premio-no-img"><span style="font-size:5rem">🎁</span></div>`
-      }
+      <div class="carousel">
+        <div class="carousel-track" id="carouselTrack">${slidesHtml}</div>
+        ${navHtml}
+      </div>
       <div class="premio-body">
         <span class="prize-badge">🏆 Prêmio — R$${config.preco.toFixed(2)} por número</span>
         <h3 class="prize-titulo">${escapeHtml(premio.nome)}</h3>
         ${premio.descricao ? `<p class="prize-desc">${escapeHtml(premio.descricao)}</p>` : ''}
       </div>
-    </div>
-  `;
+    </div>`;
+}
+
+function moverCarousel(dir) {
+  const total = _carouselImagens.length;
+  if (total <= 1) return;
+  carouselIndex = (carouselIndex + dir + total) % total;
+  _atualizarCarousel();
+}
+
+function irParaSlide(idx) {
+  carouselIndex = idx;
+  _atualizarCarousel();
+}
+
+function _atualizarCarousel() {
+  const track = document.getElementById('carouselTrack');
+  if (track) track.style.transform = `translateX(-${carouselIndex * 100}%)`;
+  document.querySelectorAll('.carousel-dot').forEach((d, i) =>
+    d.classList.toggle('active', i === carouselIndex));
+}
+
+function abrirLightbox(idx) {
+  const src = _carouselImagens[idx];
+  if (!src) return;
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightboxOverlay').classList.add('open');
+}
+
+function fecharLightbox() {
+  document.getElementById('lightboxOverlay').classList.remove('open');
 }
 
 function renderizarNumeros() {
@@ -225,7 +274,7 @@ async function enviarSolicitacao() {
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') fecharSolicitacao();
+  if (e.key === 'Escape') { fecharSolicitacao(); fecharLightbox(); }
 });
 
 function mostrarInfoNumero(num, status) {

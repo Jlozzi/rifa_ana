@@ -105,10 +105,6 @@
               <input type="text" id="cfgPix" placeholder="Ex: email@email.com, CPF, telefone ou chave aleatória" />
             </div>
             <div class="form-group">
-              <label for="cfgSenha">Nova Senha Admin (opcional)</label>
-              <input type="password" id="cfgSenha" placeholder="Deixe em branco para manter" />
-            </div>
-            <div class="form-group">
               <label>Imagem de Fundo do Header</label>
               <div class="image-upload-area" id="bgUploadArea" onclick="document.getElementById('bgImg').click()">
                 <img id="bgPreview" class="image-preview" style="display:none" alt="Preview fundo" />
@@ -137,17 +133,45 @@
               <input type="text" id="cfgPremioDesc" placeholder="Ex: Air Fryer digital, 8 funções..." />
             </div>
             <div class="form-group">
-              <label>Foto do Prêmio</label>
-              <div class="image-upload-area" id="premioUploadArea" onclick="document.getElementById('premioImg').click()">
-                <img id="premioPreview" class="image-preview" style="display:none" alt="Preview" />
-                <div class="upload-placeholder" id="premioPlaceholder">
-                  <span class="upload-icon">📷</span>
-                  <span>Clique para adicionar foto</span>
-                  <span class="upload-hint">PNG, JPG ou WEBP — máx. 2MB</span>
+              <label>Fotos do Prêmio (até 3)</label>
+              <div class="premio-slots">
+                <div class="premio-slot">
+                  <span class="slot-label">Foto 1</span>
+                  <div class="image-upload-area" onclick="document.getElementById('premioImg').click()">
+                    <img id="premioPreview" class="image-preview" style="display:none" alt="Preview" />
+                    <div class="upload-placeholder" id="premioPlaceholder">
+                      <span class="upload-icon">📷</span>
+                      <span>Adicionar</span>
+                    </div>
+                  </div>
+                  <input type="file" id="premioImg" accept="image/*" style="display:none" onchange="carregarImagem(this, 1)" />
+                  <button class="btn btn-secondary" style="font-size:0.78rem;margin-top:6px" onclick="removerImagem(1)">✖️ Remover</button>
+                </div>
+                <div class="premio-slot">
+                  <span class="slot-label">Foto 2</span>
+                  <div class="image-upload-area" onclick="document.getElementById('premioImg2').click()">
+                    <img id="premio2Preview" class="image-preview" style="display:none" alt="Preview 2" />
+                    <div class="upload-placeholder" id="premio2Placeholder">
+                      <span class="upload-icon">📷</span>
+                      <span>Adicionar</span>
+                    </div>
+                  </div>
+                  <input type="file" id="premioImg2" accept="image/*" style="display:none" onchange="carregarImagem(this, 2)" />
+                  <button class="btn btn-secondary" style="font-size:0.78rem;margin-top:6px" onclick="removerImagem(2)">✖️ Remover</button>
+                </div>
+                <div class="premio-slot">
+                  <span class="slot-label">Foto 3</span>
+                  <div class="image-upload-area" onclick="document.getElementById('premioImg3').click()">
+                    <img id="premio3Preview" class="image-preview" style="display:none" alt="Preview 3" />
+                    <div class="upload-placeholder" id="premio3Placeholder">
+                      <span class="upload-icon">📷</span>
+                      <span>Adicionar</span>
+                    </div>
+                  </div>
+                  <input type="file" id="premioImg3" accept="image/*" style="display:none" onchange="carregarImagem(this, 3)" />
+                  <button class="btn btn-secondary" style="font-size:0.78rem;margin-top:6px" onclick="removerImagem(3)">✖️ Remover</button>
                 </div>
               </div>
-              <input type="file" id="premioImg" accept="image/*" style="display:none" onchange="carregarImagem(this)" />
-              <button class="btn btn-secondary" style="margin-top:8px;font-size:0.82rem" onclick="removerImagem()">✖️ Remover Foto</button>
             </div>
             <button class="btn btn-primary" onclick="salvarPremio()">💾 Salvar Prêmio</button>
           </div>

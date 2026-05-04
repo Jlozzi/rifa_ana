@@ -48,7 +48,9 @@ function mostrarAdmin() {
   aplicarBgImagem();
   renderizarTudo();
   sincronizarForms();
-  if (state.premio.imagem)   atualizarPreviewImagem('premio', state.premio.imagem);
+  atualizarPreviewImagem('premio',  state.premio.imagem);
+  atualizarPreviewImagem('premio2', state.premio.imagem2);
+  atualizarPreviewImagem('premio3', state.premio.imagem3);
   if (state.config.bgImagem) atualizarPreviewImagem('bg', state.config.bgImagem);
   iniciarRealtimeAdmin();
 }
@@ -425,26 +427,35 @@ function confirmarReset() {
   );
 }
 
-function carregarImagem(input) {
+function carregarImagem(input, slot) {
   const file = input.files[0];
   if (!file) return;
   if (file.size > 2 * 1024 * 1024) showToast('⚠️ Imagem grande! Prefira menos de 2MB.');
+  const campos = { 1: 'imagem', 2: 'imagem2', 3: 'imagem3' };
+  const tipos  = { 1: 'premio', 2: 'premio2', 3: 'premio3' };
+  const campo  = campos[slot];
+  const tipo   = tipos[slot];
   const reader = new FileReader();
   reader.onload = async e => {
     const base64 = e.target.result;
-    await sb.from('premio').update({ imagem: base64 }).eq('id', 1);
-    state.premio.imagem = base64;
-    atualizarPreviewImagem('premio', base64);
+    await sb.from('premio').update({ [campo]: base64 }).eq('id', 1);
+    state.premio[campo] = base64;
+    atualizarPreviewImagem(tipo, base64);
     showToast('✅ Foto carregada!');
   };
   reader.readAsDataURL(file);
 }
 
-async function removerImagem() {
-  await sb.from('premio').update({ imagem: null }).eq('id', 1);
-  state.premio.imagem = null;
-  atualizarPreviewImagem('premio', null);
-  document.getElementById('premioImg').value = '';
+async function removerImagem(slot) {
+  const campos   = { 1: 'imagem', 2: 'imagem2', 3: 'imagem3' };
+  const tipos    = { 1: 'premio', 2: 'premio2', 3: 'premio3' };
+  const inputIds = { 1: 'premioImg', 2: 'premioImg2', 3: 'premioImg3' };
+  const campo    = campos[slot];
+  const tipo     = tipos[slot];
+  await sb.from('premio').update({ [campo]: null }).eq('id', 1);
+  state.premio[campo] = null;
+  atualizarPreviewImagem(tipo, null);
+  document.getElementById(inputIds[slot]).value = '';
   showToast('🗑️ Imagem removida');
 }
 
