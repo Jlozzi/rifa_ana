@@ -580,6 +580,54 @@ input::placeholder {
   border-radius: var(--radius-sm);
 }
 
+/* ============================================ DESCRIÇÃO */
+.descricao-section {
+  margin-bottom: 40px;
+}
+
+.descricao-card {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(236, 72, 153, 0.05));
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+
+.descricao-titulo {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.descricao-subtitulo {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.descricao-texto {
+  font-size: 0.97rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.descricao-destaque {
+  background: rgba(124, 58, 237, 0.08);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 16px 20px;
+  margin-top: 20px;
+}
+
+.descricao-destaque-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
 /* ============================================ PRÊMIO (singular) */
 .premio-section {
   margin-bottom: 40px;
